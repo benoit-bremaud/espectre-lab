@@ -1,0 +1,61 @@
+# ESPectre — Wi-Fi CSI motion detection on a single ESP32.
+# Standalone config: exposes the motion state via the built-in web server.
+# Home Assistant is NOT required (the native API is included for a future HA setup).
+#
+# Adjust `board` to your hardware (see docs/hardware.md). Examples:
+#   ESP32-S3 -> esp32-s3-devkitc-1
+#   ESP32-C6 -> esp32-c6-devkitc-1
+#   ESP32-C3 -> esp32-c3-devkitm-1
+
+substitutions:
+  name: espectre-lab
+  friendly_name: "ESPectre Lab"
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    # ESP-IDF is mandatory: CSI is only available through it.
+    type: esp-idf
+    sdkconfig_options:
+      # Power management must be off, otherwise CSI frames are not delivered.
+      CONFIG_PM_ENABLE: n
+      CONFIG_ESP_WIFI_STA_DISCONNECTED_PM_ENABLE: n
+      # Enable Channel State Information capture.
+      CONFIG_ESP_WIFI_CSI_ENABLED: y
+
+# Pull the ESPectre component from upstream and bake it into the firmware.
+external_components:
+  - source: github://francescopace/espectre
+    components: [espectre]
+
+# The motion-detection component. See the upstream README for tunable options
+# (e.g. detection threshold); start with defaults and tune via experiments.
+espectre:
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  # Fallback hotspot if the configured Wi-Fi is unavailable.
+  ap:
+    ssid: "${friendly_name} Setup"
+    password: !secret ap_password
+
+captive_portal:
+
+logger:
+
+# Browser dashboard — enough to read the motion state without Home Assistant.
+web_server:
+  port: 80
+
+# Native API: unused for now; lets the device auto-discover in Home Assistant later.
+api:
+
+# Over-the-air updates after the first USB flash.
+ota:
+  - platform: esphome
+    password: !secret ota_password

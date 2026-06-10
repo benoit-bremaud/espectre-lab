@@ -1,0 +1,6 @@
+# Fichiers gitignored à copier dans les nouveaux worktrees
+# Syntaxe identique à .gitignore
+
+.env
+.env.local
+.env.development.local
