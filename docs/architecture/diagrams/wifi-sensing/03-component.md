@@ -25,8 +25,8 @@ flowchart TB
 
     AP -->|Wi-Fi frames / CSI| WIFI
     WIFI --> ESPECTRE
-    ESPECTRE -->|motion state| WEB
-    ESPECTRE -->|motion state| API
+    ESPECTRE -->|motion + 0-10 score| WEB
+    ESPECTRE -->|motion + 0-10 score| API
     WEB --> BR
     API -. optional .-> HA
     WIFI -. fallback AP .- CP
@@ -35,10 +35,10 @@ flowchart TB
 
 ## Notes
 
-- The **only egress points** for the motion state are `web_server` (browser, used now)
+- The **only egress points** for the sensor outputs are `web_server` (browser, used now)
   and `api` (Home Assistant, future) — there is no cloud path, by design.
 - `espectre` depends on `wifi` for the raw CSI stream; everything downstream consumes the
-  binary state `espectre` produces.
+  sensors `espectre` produces (`motion_sensor` + `movement_sensor` 0-10 score).
 - `captive_portal` is the fallback when the configured Wi-Fi is unreachable; `logger`
   is cross-cutting (serial/web logs) and has no functional dependency.
 - This is a structural view only — *who wants what* lives in

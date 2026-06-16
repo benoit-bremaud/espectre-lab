@@ -33,8 +33,13 @@ external_components:
   - source: github://francescopace/espectre@2.8.0
     components: [espectre]
 
-# The motion-detection component. See the upstream README for tunable options
-# (e.g. detection threshold); start with defaults and tune via experiments.
+# The motion-detection component. Adding it auto-creates:
+#   - motion_sensor   : binary (motion / no motion)
+#   - movement_sensor : 0-10 movement-intensity score (kept exposed on purpose — it is
+#                       the signal we watch to tune the threshold during experiments;
+#                       add `internal: true` if you only want the binary state)
+#   - a threshold number + a calibrate switch (runtime tuning / recalibration)
+# See the upstream SETUP.md for tunable options; start with defaults and tune via experiments.
 espectre:
 
 wifi:

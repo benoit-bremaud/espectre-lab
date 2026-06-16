@@ -47,7 +47,8 @@ later for automations.
    esphome logs esphome/espectre.yaml
    ```
 
-   Open the printed IP in a browser to see the motion binary sensor toggle.
+   Open the printed IP in a browser to watch the sensors: the `motion_sensor` toggling
+   ON/OFF and the `movement_sensor` 0–10 score (handy for tuning the threshold).
 
 ## Standalone vs Home Assistant
 
