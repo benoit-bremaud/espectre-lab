@@ -5,6 +5,32 @@ and findings that the commit history alone does not capture. Newest entries on t
 
 ---
 
+## 2026-06-16 — Pin upstream component + ESPHome config CI
+
+**Context.** No board in hand yet; goal is to make everything flash-ready so the first
+flash is a one-command step when hardware arrives. Review of #1 also flagged an unpinned
+`external_components` pull (non-reproducible builds).
+
+**Decisions.**
+
+- Pin `external_components` to upstream release **`2.8.0`** (latest stable) via `ref:`.
+  Bumps are deliberate from now on.
+- Add a CI job that validates `esphome config` on every push/PR, using a placeholder
+  `secrets.yaml` copied from the example (no real credentials needed to validate).
+
+**Done.**
+
+- `esphome/espectre.yaml`: `ref: "2.8.0"` on the ESPectre source.
+- New workflow `.github/workflows/esphome.yml` (Python + `pip install esphome` +
+  `esphome config`).
+
+**Next.**
+
+- Resolve #2 (document the `movement_sensor` 0-10 score) on its own branch.
+- First flash + calibration once a board is available.
+
+---
+
 ## 2026-06-15 — UML conception set for `wifi-sensing`
 
 **Context.** Board (ESP32-S3/C6/C3) now in hand; first real flash imminent. Per the

@@ -1,0 +1,34 @@
+name: esphome
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate ESPHome config
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install ESPHome
+        run: pip install esphome
+
+      # `secrets.yaml` is gitignored; provide placeholder values so `!secret`
+      # references resolve. No real credentials are needed to validate the config.
+      - name: Provide placeholder secrets
+        run: cp esphome/secrets.yaml.example esphome/secrets.yaml
+
+      - name: Validate config
+        run: esphome config esphome/espectre.yaml
