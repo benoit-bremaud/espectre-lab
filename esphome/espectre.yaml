@@ -28,8 +28,9 @@ esp32:
       CONFIG_ESP_WIFI_CSI_ENABLED: y
 
 # Pull the ESPectre component from upstream and bake it into the firmware.
+# Pinned to a specific release (@<tag>) for reproducible builds (bump deliberately).
 external_components:
-  - source: github://francescopace/espectre
+  - source: github://francescopace/espectre@2.8.0
     components: [espectre]
 
 # The motion-detection component. See the upstream README for tunable options
