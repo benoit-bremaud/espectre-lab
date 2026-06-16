@@ -35,8 +35,15 @@ Full guide: [docs/setup-esphome.md](docs/setup-esphome.md).
 - [Hardware](docs/hardware.md) — supported boards, what to buy, why not ESP8266.
 - [Setup with ESPHome](docs/setup-esphome.md) — flash, calibrate, standalone vs Home Assistant.
 - [Privacy & RGPD](docs/privacy.md) — local-only data and consent considerations.
-- [Data-flow diagram](docs/architecture/diagrams/wifi-sensing/01-data-flow.md).
 - [Experiments journal](experiments/) — dated notes on placement, false positives, findings.
+
+### UML — `wifi-sensing` conception
+
+- [Use-case](docs/architecture/diagrams/wifi-sensing/01-use-case.md) — who interacts, to do what.
+- [Sequence](docs/architecture/diagrams/wifi-sensing/02-sequence-detection.md) — boot → calibration → detection loop.
+- [Component](docs/architecture/diagrams/wifi-sensing/03-component.md) — firmware structure and dependencies.
+- [State](docs/architecture/diagrams/wifi-sensing/05-state-motion.md) — the motion lifecycle (calibrate → monitor).
+- [Data-flow](docs/architecture/diagrams/wifi-sensing/06-data-flow.md) — radio waves → consumable motion state.
 
 ## Credits & references
 
