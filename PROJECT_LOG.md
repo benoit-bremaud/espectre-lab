@@ -33,10 +33,13 @@ flash is a one-command step when hardware arrives. Review of #1 also flagged an 
 
 ## 2026-06-15 — UML conception set for `wifi-sensing`
 
-**Context.** Board (ESP32-S3/C6/C3) now in hand; first real flash imminent. Per the
-UML-first rule, the sensing feature must be modelled before the build. Only the
-data-flow diagram existed, and it was mis-numbered vs the convention (use-case first →
-data-flow last).
+**Context.** Modelling the sensing feature ahead of the planned first flash. Per the
+UML-first rule, the feature must be modelled before the build. Only the data-flow diagram
+existed, and it was mis-numbered vs the convention (use-case first → data-flow last).
+
+> **Correction (2026-06-16):** an earlier draft of this entry stated a board was already
+> in hand. That was inaccurate — no compatible ESP32 is available yet; the first flash is
+> deferred until hardware arrives (see the 2026-06-16 entry).
 
 **Decisions.**
 
