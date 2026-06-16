@@ -19,12 +19,14 @@ stateDiagram-v2
 
     Monitoring --> WifiDisconnected : Wi-Fi lost
     WifiDisconnected --> Monitoring : reconnected
-    Monitoring --> Boot : reboot (re-calibrate)
+    Monitoring --> Calibrating : calibrate switch (runtime)
+    Monitoring --> Boot : reboot
 
     note right of Calibrating
         Room must stay still.
         Bad baseline = unreliable
-        detection until next reboot.
+        until recalibrated
+        (calibrate switch or reboot).
     end note
     note right of WifiDisconnected
         captive_portal AP fallback
@@ -36,8 +38,8 @@ stateDiagram-v2
 
 - `Monitoring` is the only steady state; `NoMotion` ↔ `Motion` is the binary output
   surfaced to `web_server` — no intermediate "maybe" / count states by design.
-- The baseline is captured **once** at `Calibrating`; recalibration requires a reboot,
-  which is why moving the board or rearranging furniture means a reboot
-  (see [setup-esphome.md](../../../setup-esphome.md) §Tuning).
+- The baseline is captured at `Calibrating`; recapture it at runtime with the `calibrate`
+  switch (no reboot needed) — or by rebooting — after moving the board or rearranging
+  furniture (see [setup-esphome.md](../../../setup-esphome.md) §Tuning).
 - A Wi-Fi drop does **not** re-trigger calibration: on reconnect the device resumes
   `Monitoring` with the existing baseline.

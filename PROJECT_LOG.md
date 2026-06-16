@@ -5,6 +5,33 @@ and findings that the commit history alone does not capture. Newest entries on t
 
 ---
 
+## 2026-06-16 — Document the movement_sensor 0-10 score (closes #2)
+
+**Context.** Review of #1 (and verification against upstream SETUP.md) showed `espectre:`
+auto-creates more than the binary `motion_sensor`: also a `movement_sensor` 0-10 score,
+a threshold `number`, and a `calibrate` switch. The conception framed the output as
+"binary only", which was inaccurate.
+
+**Decisions.**
+
+- **Keep the score exposed** (not `internal: true`): the continuous 0-10 value is the
+  signal we want to watch when tuning the threshold during experiments.
+- Make the whole conception consistent with the real sensor set.
+
+**Done.**
+
+- Diagrams: `02-sequence-detection` (publishes the score per frame), `06-data-flow` (added
+  the `movement_sensor` output path), `03-component` (edge labels).
+- Docs: `how-it-works.md`, `privacy.md` (continuous score is more revealing; `internal:
+  true` option for minimisation), `setup-esphome.md`, and a clarifying comment in
+  `espectre.yaml`.
+
+**Next.**
+
+- First flash once a board is available; confirm the exposed sensors match the docs.
+
+---
+
 ## 2026-06-16 — Pin upstream component + ESPHome config CI
 
 **Context.** No board in hand yet; goal is to make everything flash-ready so the first

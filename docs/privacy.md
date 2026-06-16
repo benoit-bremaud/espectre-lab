@@ -2,10 +2,15 @@
 
 ## Local-first by design
 
-ESPectre processes CSI on the ESP32 itself and exposes only a binary motion state. There
-is no image, no audio, and no raw data leaving the device unless you explicitly forward
-it (e.g. to Home Assistant on your own LAN). Keeping everything local is the privacy
-advantage of this approach over cameras.
+ESPectre processes CSI on the ESP32 itself and exposes a binary motion state **and** a
+0–10 movement-intensity score (the `movement_sensor`). There is no image, no audio, and no
+raw data leaving the device unless you explicitly forward it (e.g. to Home Assistant on
+your own LAN). Keeping everything local is the privacy advantage of this approach over
+cameras.
+
+Note that the continuous 0–10 score is **more revealing than the binary state**: logged
+over time it can hint at activity patterns (when a room is busy or quiet). Treat it as the
+more sensitive of the two outputs.
 
 ## Where RGPD still applies
 
@@ -18,8 +23,10 @@ a home lab, apply these principles:
   unethical and unlawful.
 - **Purpose limitation.** Use it for the stated purpose (e.g. turn on a light), not for
   silently profiling someone's daily routine.
-- **Data minimisation.** Keep only the binary state you need; do not log long-term
-  movement histories of identifiable people without a clear, lawful reason.
+- **Data minimisation.** Keep only what you need. If the binary state is enough, set
+  `internal: true` on `movement_sensor` so the 0–10 score is computed but not exposed;
+  do not log long-term movement histories of identifiable people without a clear, lawful
+  reason.
 - **Scope.** Monitor your own space. Do not point it at, or infer activity in, a
   neighbour's home.
 

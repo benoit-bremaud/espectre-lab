@@ -23,13 +23,21 @@ pattern over time.** No camera, no PIR sensor — just the Wi-Fi that is already
 3. ESPectre computes how much the CSI deviates from a learned **baseline** (the "quiet
    room" fingerprint captured at boot).
 4. Deviation above a threshold → **motion detected**; back to baseline → no motion.
-5. The state is exposed as a binary sensor (motion / no motion).
+5. Adding `espectre:` auto-creates **two** sensors (plus controls):
+   - `motion_sensor` — **binary** (motion / no motion), the thresholded state from step 4.
+   - `movement_sensor` — a **0–10 movement-intensity score** (a moving-variance metric in
+     MVS mode, or a 0–10 confidence-like score in ML mode).
+   - a `threshold` number and a `calibrate` switch to tune/recalibrate at runtime.
+
+The score is the more useful signal while experimenting: you watch it rise and fall to
+tune the threshold, rather than seeing only the ON/OFF flip.
 
 ## Calibration
 
 At boot the component needs a stable reference. For ~10 seconds after power-on, **keep
 the room still** so the baseline represents an empty/quiet space. A bad baseline (someone
-walking during calibration) makes detection unreliable until the next reboot.
+walking during calibration) makes detection unreliable until you recalibrate — either by
+toggling the `calibrate` switch at runtime (no reboot) or by rebooting with a still room.
 
 ## What it can and cannot do
 
@@ -41,7 +49,8 @@ It can:
 
 It cannot:
 
-- **Count people** — output is binary (motion / no motion), not a headcount.
+- **Count people** — neither the binary state nor the 0–10 score is a headcount; the
+  score reflects movement *intensity*, not how many bodies moved.
 - **Identify** who moved.
 - Avoid false positives from non-human movement.
 
