@@ -61,5 +61,5 @@ later for automations.
 
 - If you get too many false triggers, raise the detection threshold in the `espectre`
   config block (see the upstream README for the exact options) and re-flash via OTA.
-- Re-calibrate (reboot with a still room) whenever you move the board or rearrange
-  furniture significantly.
+- Re-calibrate with a still room whenever you move the board or rearrange furniture
+  significantly — toggle the `calibrate` switch at runtime (no reboot) or reboot.

@@ -36,7 +36,8 @@ tune the threshold, rather than seeing only the ON/OFF flip.
 
 At boot the component needs a stable reference. For ~10 seconds after power-on, **keep
 the room still** so the baseline represents an empty/quiet space. A bad baseline (someone
-walking during calibration) makes detection unreliable until the next reboot.
+walking during calibration) makes detection unreliable until you recalibrate — either by
+toggling the `calibrate` switch at runtime (no reboot) or by rebooting with a still room.
 
 ## What it can and cannot do
 
