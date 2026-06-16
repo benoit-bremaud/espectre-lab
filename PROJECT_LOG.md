@@ -5,6 +5,35 @@ and findings that the commit history alone does not capture. Newest entries on t
 
 ---
 
+## 2026-06-15 — UML conception set for `wifi-sensing`
+
+**Context.** Board (ESP32-S3/C6/C3) now in hand; first real flash imminent. Per the
+UML-first rule, the sensing feature must be modelled before the build. Only the
+data-flow diagram existed, and it was mis-numbered vs the convention (use-case first →
+data-flow last).
+
+**Decisions.**
+
+- Complete the `wifi-sensing` conception with four diagrams (use-case, sequence,
+  component, state) — Mermaid, matching the existing style (no PlantUML for this lab).
+- **Skip `class`** (n° 04 left intentionally empty): the repo consumes an upstream
+  `external_component` (YAML), there is no first-party class model to own.
+- Renumber data-flow to last (`06-data-flow.md`) for convention conformance.
+
+**Done.**
+
+- New diagrams: `01-use-case.md`, `02-sequence-detection.md`, `03-component.md`,
+  `05-state-motion.md` under `docs/architecture/diagrams/wifi-sensing/`.
+- Renamed `01-data-flow.md` → `06-data-flow.md`; updated the README docs section to
+  list the full diagram set.
+
+**Next.**
+
+- First USB flash + ~10 s calibration, then fill experiment `0001` (placement, false
+  positives) against the modelled behaviour.
+
+---
+
 ## 2026-06-10 — Repository scaffold
 
 **Context.** Discovered ESPectre via Korben's article on Wi-Fi CSI motion detection.
