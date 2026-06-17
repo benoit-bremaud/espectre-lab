@@ -2,21 +2,22 @@
 # Standalone config: exposes the motion state via the built-in web server.
 # Home Assistant is NOT required (the native API is included for a future HA setup).
 #
-# Adjust `board` to your hardware (see docs/hardware.md). Examples:
+# This lab runs on the ESP32-C3 SuperMini (board id `esp32-c3-devkitm-1`).
+# Adjust `board` for other hardware (see docs/hardware.md). Examples:
 #   ESP32-S3 -> esp32-s3-devkitc-1
 #   ESP32-C6 -> esp32-c6-devkitc-1
 #   ESP32-C3 -> esp32-c3-devkitm-1
 
 substitutions:
-  name: espectre-lab
-  friendly_name: "ESPectre Lab"
+  name: espectre-01
+  friendly_name: "ESPectre 01"
 
 esphome:
   name: ${name}
   friendly_name: ${friendly_name}
 
 esp32:
-  board: esp32-s3-devkitc-1
+  board: esp32-c3-devkitm-1
   framework:
     # ESP-IDF is mandatory: CSI is only available through it.
     type: esp-idf
@@ -53,6 +54,9 @@ wifi:
 captive_portal:
 
 logger:
+  # C3 SuperMini: route the console to the native USB (UART0 is not wired to the
+  # USB port on this board), otherwise `esphome logs` over USB stays silent.
+  hardware_uart: USB_SERIAL_JTAG
 
 # Browser dashboard — enough to read the motion state without Home Assistant.
 web_server:
