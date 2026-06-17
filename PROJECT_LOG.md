@@ -5,6 +5,25 @@ and findings that the commit history alone does not capture. Newest entries on t
 
 ---
 
+## 2026-06-16 — Target the ESP32-C3 SuperMini for the first flash
+
+**Context.** Three ESP32-C3 SuperMini boards are now in hand; bringing up the first one.
+The config still targeted `esp32-s3-devkitc-1` and had a bare `logger:`.
+
+**Decisions.**
+
+- Set `board: esp32-c3-devkitm-1` (standard generic C3 id, valid for the SuperMini).
+- Route the logger to the C3's native USB: `logger: hardware_uart: USB_SERIAL_JTAG`.
+  On the SuperMini, UART0 is not wired to the USB port, so without this `esphome logs`
+  over USB stays silent.
+- Rename the device `espectre-lab` → `espectre-01` (unique mDNS/OTA hostname; sets up an
+  -01/-02/-03 scheme for the three boards).
+
+**Next.** Flash board 1 over USB, ~10 s calibration, verify the web UI sensors; then
+commit/PR this config (CI re-validates `esphome config` on C3) and replicate to 02/03.
+
+---
+
 ## 2026-06-16 — Document the movement_sensor 0-10 score (closes #2)
 
 **Context.** Review of #1 (and verification against upstream SETUP.md) showed `espectre:`
