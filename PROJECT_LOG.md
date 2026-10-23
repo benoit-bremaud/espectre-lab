@@ -5,6 +5,45 @@ and findings that the commit history alone does not capture. Newest entries on t
 
 ---
 
+## 2026-10-23 — Module back online + experiment capture tooling (#6)
+
+**Context.** Board `espectre-01` (flashed 2026-06-17 on the homelab Pi, ESPHome 2026.5.3,
+ESPectre 2.8.0) was re-plugged after ~4 months. It rejoined Wi-Fi at `192.168.1.123` on
+the homelab LAN, reachable from the laptop only through the Pi (`bb-homelab`, Tailscale).
+First real measurement = experiment `0002`: 180 s unattended, house empty.
+
+**Findings.**
+
+- Cold restart needs nothing: mDNS, web server (80) and native API (6053) all answer.
+- Idle score ≈ 0.23 (p99 0.349, max 0.406) against the default threshold 0.4: one 1 s
+  false positive in 3 min with the house empty. Headroom is too thin by default.
+- Device log prints `thr:0.3690` while the `Threshold` entity reads `0.4`: to explain
+  from upstream before tuning.
+
+**Decisions.**
+
+- Experiment recorder = **SSE + Python** (MCDA 410/500) over MQTT + Python (350, design
+  fallback if SSE proves unstable on long runs: swaps `capture.sh` only) and Home
+  Assistant recorder (335). Criteria: fit to ground-truth stats 25, analysis freedom 20,
+  effort 15, 24/7 recording 10, firmware change 10, KISS 10, learning value 10.
+- Python profile added as **stdlib only** (no pandas yet): `csv` + `statistics` cover the
+  stats/precision/recall needs; pandas can come with a notebook if ever needed.
+- CSV data files contain score + motion state only (privacy doc updated); short runs
+  referenced by a journal entry are committed.
+
+**Done.**
+
+- UML `docs/architecture/diagrams/experiment-capture/` (data-flow, sequence).
+- `experiments/tools/`: `capture.sh` (SSE → CSV, optional ssh hop), `mark.sh` (manual
+  ground truth), `sse_to_csv.py`, `analyze.py` (stats, episodes, precision/recall,
+  markdown out). `tests/` with pytest (97 % coverage), ruff + mypy strict, CI `python.yml`.
+- Experiment `0002` + its CSV; README / experiments README / privacy / CLAUDE.md updated.
+
+**Next.** 10 min baseline with documented placement, then a marked walk-through to pick
+the threshold on precision/recall; investigate `thr:0.3690`.
+
+---
+
 ## 2026-06-16 — Target the ESP32-C3 SuperMini for the first flash
 
 **Context.** Three ESP32-C3 SuperMini boards are now in hand; bringing up the first one.

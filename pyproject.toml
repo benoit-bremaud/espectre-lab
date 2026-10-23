@@ -1,0 +1,21 @@
+# Tool configuration only: the experiment scripts are stdlib Python, not a package.
+# Dev tools are listed in requirements-dev.txt.
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["experiments/tools"]
+
+[tool.coverage.run]
+source = ["experiments/tools"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+src = ["experiments/tools", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "ANN"]
+
+[tool.mypy]
+strict = true
+files = ["experiments/tools", "tests"]
