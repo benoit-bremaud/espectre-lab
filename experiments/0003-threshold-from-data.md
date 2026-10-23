@@ -109,13 +109,45 @@ recall, score range while walking vs still._
   0.369 and on sub-second peaks the SSE stream does not publish. Counting
   `Samples ≥ threshold` in the CSV therefore under-estimates real false positives;
   `Motion ON episodes (device)` is the number to trust for the deployed firmware.
+### Why the device fires at 0.369 while the entity shows 0.4 (ESPectre 2.8.0 source)
+
+Read from the upstream tag `2.8.0` (`components/espectre/`), closes the `0002` side
+observation and the matching item of issue #8:
+
+- **The threshold is adaptive, recomputed at every boot and every `Calibrate`.** With the
+  default `segmentation_threshold: auto`, after the ~10 s baseline calibration the
+  firmware takes the moving-variance values of that window and sets
+  `threshold = P95 × 1.1` (`threshold.h`, `espectre.cpp` calibration callback). On
+  `espectre-01` that gave **0.3690**: the log value is the real detector threshold.
+  It is consistent with our 10 min p99 of 0.35: 10 s of calibration under-estimates the
+  tail, so the auto threshold ends up inside the idle noise.
+- **0.4 is a display rounding.** The `Threshold` number entity is declared with
+  `step=0.1` (`__init__.py`); the web server and Home Assistant show 0.369 as 0.4.
+  Nothing is wrong with the entity, it just cannot display the third decimal.
+- **A slider change is session-only.** `set_threshold_runtime()` logs "session-only,
+  recalculated at boot": any value set from the web UI or HA is lost at the next reboot
+  or recalibration. A durable threshold needs `segmentation_threshold: <number>` in the
+  YAML (MANUAL mode, adaptive calculation skipped, the log then prints both).
+- **No hysteresis, but a 3-hit debounce.** `MVSDetector` compares the moving variance
+  strictly `>` / `<` the same threshold; the effective state only flips after
+  `motion_on_hits` / `motion_off_hits` = 3 consecutive evaluations.
+- **Evaluation is 4× faster than publication.** The detector is evaluated every
+  `evaluation_interval` = 25 packets and the score is published every
+  `publish_interval` = 100 packets (= the 100 pkt/s traffic generator), i.e. ~250 ms vs
+  ~1 s. A motion episode therefore needs only ~750 ms over the threshold, and the 1 Hz
+  SSE stream can miss the whole crossing — exactly the 12:36:32 trigger with no
+  published sample over 0.344.
+
+Consequences for this experiment: compare the CSV scores against **0.369**, not 0.4,
+when explaining device episodes; and the chosen threshold must go into the YAML as
+`segmentation_threshold`, not into the slider.
+
 - _Threshold recommendation: to complete after the walk-through._
 
 ## Next
 
 - Walk-through this evening, windows closed (step 3 of the procedure).
-- Apply the chosen threshold in `esphome/espectre.yaml` in a separate PR.
-- Issue #8: trace `thr:0.3690` in ESPectre 2.8.0 source (how the entity value maps to
-  the internal threshold) before trusting any entity-based tuning.
+- Apply the chosen threshold as `segmentation_threshold: <value>` in
+  `esphome/espectre.yaml` (separate PR); the slider would not survive a reboot.
 - Optional `0004`: 10 min fan off + windows closed, to measure what the fan adds.
 - Issue #11: multi-module room-level localization (heat map), long term.
