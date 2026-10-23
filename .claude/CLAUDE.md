@@ -23,6 +23,9 @@ the upstream component and documents experiments. Curiosity-driven, no productio
 - Experiment run : `experiments/tools/capture.sh HOST SECONDS SLUG [SSH_HOST]`, then
   `python3 experiments/tools/analyze.py experiments/data/<date>-<slug>.csv`.
 - Python checks : `ruff format . && ruff check . && mypy && pytest --cov` (CI `python.yml`).
+- SonarQube (local instance, pre-push/pre-merge gate) : `pytest --cov --cov-report=xml`
+  then `SONAR_TOKEN="$(cat ~/.config/sonarqube/analysis-token)" sonar-scanner`
+  (config in `sonar-project.properties`, project `espectre-lab`, waits for the gate).
 - The module lives on the homelab LAN (`192.168.1.x`), not the laptop LAN: reach it via
   `ssh benoit@bb-homelab` (4th arg of `capture.sh`).
 

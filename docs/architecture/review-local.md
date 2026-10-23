@@ -12,10 +12,10 @@
 |---|---|
 | 1 Tests | ✅ 29 unit (pytest) · ✅ smoke: real 20 s capture via the Pi + 4 failure paths (rerun refused, ssh denied 255, unreachable host 7, bad slug 2) · no E2E suite in this repo |
 | 2 Coverage | tests **94 %** stmts (floor 80) · docs: every public function/class in `experiments/tools/` now carries a contract docstring (floor 90) ✅ |
-| 3 SonarQube | ⚠️ **waived for this PR** — no SonarQube project exists for the repo; owner decision 2026-10-23 (MCDA A 360 / B 360 tie, B chosen on one-task-per-chat): set up in its own brick, issue #7 |
+| 3 SonarQube | ✅ **PASSED** on the local instance (`localhost:9000`, project `espectre-lab`, auto-provisioned by the first scan with the global analysis token): bugs 0 · vulnerabilities 0 · code smells 0 · hotspots 0 · coverage 94.3 % · duplication 0 %. The earlier waiver (#7) was withdrawn: the project only needed a first scan |
 | 4 Secrets | ✅ gitleaks clean (main..HEAD and full tree) · no tracked .env · diff read: no secrets; private LAN details only (see Nice / #8) |
 | 5 QA pass | ✅ CLI product: `capture.sh` → CSV → `analyze.py` on the live module; transcript `docs/architecture/qa/2026-10-23-capture-smoke.txt` |
-- Gate: **GREEN with SonarQube waiver (#7) — merge authorised**
+- Gate: **GREEN — merge authorised**
 
 Findings below are as reported at review time (commit 18a9bd0); Must and Should are resolved.
 
