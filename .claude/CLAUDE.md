@@ -10,7 +10,8 @@ the upstream component and documents experiments. Curiosity-driven, no productio
 
 - **ESPHome** (YAML) compiled to ESP32 firmware — ESP-IDF framework (required for CSI).
 - Markdown for docs and the experiment journal.
-- No Node / Python toolchain yet (may add a Python profile later for CSI data analysis).
+- Python ≥ 3.11, **stdlib only**, for the experiment capture/analysis scripts in
+  `experiments/tools/` (no pandas until a real need; dev tools in `requirements-dev.txt`).
 
 ## Commands
 
@@ -19,6 +20,11 @@ the upstream component and documents experiments. Curiosity-driven, no productio
 - Flash (USB, first time) : `esphome run esphome/espectre.yaml`
 - Live logs : `esphome logs esphome/espectre.yaml`
 - Secrets live in `esphome/secrets.yaml` (gitignored; copy from `secrets.yaml.example`).
+- Experiment run : `experiments/tools/capture.sh HOST SECONDS SLUG [SSH_HOST]`, then
+  `python3 experiments/tools/analyze.py experiments/data/<date>-<slug>.csv`.
+- Python checks : `ruff format . && ruff check . && mypy && pytest --cov` (CI `python.yml`).
+- The module lives on the homelab LAN (`192.168.1.x`), not the laptop LAN: reach it via
+  `ssh benoit@bb-homelab` (4th arg of `capture.sh`).
 
 ## Architecture
 

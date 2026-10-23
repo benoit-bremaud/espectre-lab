@@ -35,7 +35,13 @@ Full guide: [docs/setup-esphome.md](docs/setup-esphome.md).
 - [Hardware](docs/hardware.md) — supported boards, what to buy, why not ESP8266.
 - [Setup with ESPHome](docs/setup-esphome.md) — flash, calibrate, standalone vs Home Assistant.
 - [Privacy & RGPD](docs/privacy.md) — local-only data and consent considerations.
-- [Experiments journal](experiments/) — dated notes on placement, false positives, findings.
+- [Experiments journal](experiments/) — dated notes on placement, false positives, findings,
+  plus the capture/analysis scripts (`experiments/tools/`).
+
+### UML — `experiment-capture` tooling
+
+- [Data-flow](docs/architecture/diagrams/experiment-capture/01-data-flow.md) — SSE stream → CSV + marks → markdown stats.
+- [Sequence](docs/architecture/diagrams/experiment-capture/02-sequence-run.md) — one run: capture, mark, analyse.
 
 ### UML — `wifi-sensing` conception
 

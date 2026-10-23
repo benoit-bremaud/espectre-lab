@@ -35,3 +35,9 @@ a home lab, apply these principles:
 This is a personal learning lab on the author's own hardware and space. No third-party
 personal data is collected, stored, or published. If that ever changes, revisit this
 document and the lawful basis first.
+
+The experiment tooling (`experiments/tools/`) records the movement score and the motion
+state at ~1 Hz into CSV files, plus manual "moving / still" marks typed by the author
+about their own movements. No raw CSI, no identity, no third party. Committed CSVs are
+short runs tied to a journal entry; long-term histories are deliberately not kept
+(see "Data minimisation" above).
