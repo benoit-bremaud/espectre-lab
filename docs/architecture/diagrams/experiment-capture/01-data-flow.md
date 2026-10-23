@@ -15,7 +15,8 @@ flowchart LR
     end
 
     subgraph RUN[Operator shell — laptop or Pi]
-        CAP[capture.sh<br/>host, duration, slug]
+        CAP[capture.sh<br/>host, duration, slug, ssh host]
+        S2C[sse_to_csv.py<br/>keep 'state' events only]
         MARK[mark.sh<br/>moving / still]
     end
 
@@ -25,11 +26,12 @@ flowchart LR
     end
 
     subgraph ANA[Analysis — Python]
-        PY[analyze.py<br/>pandas]
+        PY[analyze.py<br/>stdlib csv + statistics]
     end
 
-    WS -->|SSE 'state' events<br/>~1 Hz JSON| CAP
-    CAP -->|one row per<br/>state event| CSV
+    WS -->|SSE stream<br/>~1 Hz JSON, via curl<br/>optionally over ssh| CAP
+    CAP -->|raw SSE lines| S2C
+    S2C -->|one row per<br/>state event| CSV
     MARK -->|one row per<br/>operator keypress| MARKS
     CSV --> PY
     MARKS --> PY
@@ -38,14 +40,17 @@ flowchart LR
 
 ## Notes
 
-- `capture.sh` keeps only `event: state` payloads and flattens them to
-  `timestamp,entity_id,value` (the SSE `ping` and `log` events are dropped).
+- `capture.sh` runs `curl` (locally, or on the ssh host when the module is on another
+  LAN) and pipes the stream into `sse_to_csv.py`, which keeps only `event: state`
+  payloads and flattens them to `timestamp,entity,value` (`ping` and `log` events are
+  dropped; truncated or valueless payloads are skipped with a warning).
 - Ground truth is manual: during a run the operator presses a key in `mark.sh` each time
   the real situation changes (`moving` ↔ `still`). A mark holds until the next one;
   a run with no mark is treated as `still` end to end (baseline run).
 - `analyze.py` is pure: files in, markdown out, no network. Threshold is an argument
   (defaults to the device's 0.4) so several thresholds can be evaluated on the same CSV.
-- Data files contain only the movement score and the motion state, never raw CSI
-  (see `docs/privacy.md`).
-- 24/7 continuous recording is out of scope: SSE is single-client and not reconnected.
+- Data files contain the entities the web server exposes (movement score, motion state,
+  threshold, calibrate switch), never raw CSI (see `docs/privacy.md`).
+- 24/7 continuous recording is out of scope: the stream is one `curl` bounded by
+  `--max-time`, with no reconnection.
   The MQTT fallback (option B) would replace `capture.sh` only; `analyze.py` is reused.

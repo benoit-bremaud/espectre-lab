@@ -2,8 +2,10 @@
 
 Usage: analyze.py experiments/data/<date>-<slug>.csv [--threshold 0.4]
 
-Pure file-in / text-out: no network, so a journal entry can be recomputed later from the
-committed CSV with another threshold.
+Ground truth, when present, is read from `<date>-<slug>.marks.csv` next to the CSV
+(written by mark.sh). "Predicted moving" means score >= threshold. Pure file-in /
+text-out: no network, so a journal entry can be recomputed later from the committed CSV
+with another threshold.
 """
 
 from __future__ import annotations
@@ -55,11 +57,13 @@ class Confusion:
 
     @property
     def precision(self) -> float | None:
+        """None (undefined, not 0) when nothing was predicted positive."""
         predicted_positive = self.true_positive + self.false_positive
         return self.true_positive / predicted_positive if predicted_positive else None
 
     @property
     def recall(self) -> float | None:
+        """None (undefined, not 0) when the ground truth has no moving sample."""
         actual_positive = self.true_positive + self.false_negative
         return self.true_positive / actual_positive if actual_positive else None
 
@@ -75,6 +79,7 @@ def read_samples(csv_path: Path, entity: str) -> list[Sample]:
 
 
 def read_marks(marks_path: Path) -> list[Mark]:
+    """Read the ground-truth marks written by mark.sh (`timestamp,label` CSV)."""
     with marks_path.open(newline="") as handle:
         return [
             Mark(datetime.fromisoformat(row["timestamp"]), row["label"])
@@ -98,6 +103,14 @@ def label_samples(samples: Sequence[Sample], marks: Sequence[Mark]) -> list[str]
 
 
 def score_stats(values: Sequence[float]) -> ScoreStats:
+    """Min / median / mean / p99 / max of `values`.
+
+    p99 uses the inclusive quantile method so it stays inside the observed range on
+    short runs (a few hundred samples); a single sample is its own p99.
+
+    Raises:
+        ValueError: if `values` is empty.
+    """
     if not values:
         raise ValueError("no score samples")
     p99 = (
@@ -127,12 +140,21 @@ def count_episodes(active_flags: Sequence[bool]) -> int:
 
 
 def confusion(labels: Sequence[str], predicted_moving: Sequence[bool]) -> Confusion:
-    counts = {"tp": 0, "fp": 0, "fn": 0, "tn": 0}
-    for label, predicted in zip(labels, predicted_moving, strict=True):
-        actual = label == LABEL_MOVING
-        key = ("t" if predicted == actual else "f") + ("p" if predicted else "n")
-        counts[key] += 1
-    return Confusion(counts["tp"], counts["fp"], counts["fn"], counts["tn"])
+    """Confusion matrix of `predicted_moving` against ground truth (positive = moving).
+
+    Raises:
+        ValueError: if `labels` and `predicted_moving` differ in length.
+    """
+    pairs = [
+        (predicted, label == LABEL_MOVING)
+        for label, predicted in zip(labels, predicted_moving, strict=True)
+    ]
+    return Confusion(
+        true_positive=sum(predicted and actual for predicted, actual in pairs),
+        false_positive=sum(predicted and not actual for predicted, actual in pairs),
+        false_negative=sum(not predicted and actual for predicted, actual in pairs),
+        true_negative=sum(not predicted and not actual for predicted, actual in pairs),
+    )
 
 
 def render_markdown(
@@ -141,6 +163,12 @@ def render_markdown(
     marks: Sequence[Mark],
     threshold: float,
 ) -> str:
+    """Markdown report for one run: score stats, then precision/recall if `marks` given.
+
+    Predicted moving = score >= `threshold`. The device's own motion state is ON when
+    the sample value is >= 1 (ESPHome booleans are coerced to 1.0 / 0.0 by `_as_float`).
+    `scores` must be non-empty (`main` guards this).
+    """
     values = [sample.value for sample in scores]
     stats = score_stats(values)
     predicted_moving = [value >= threshold for value in values]
@@ -185,7 +213,10 @@ def render_markdown(
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    """Print the report; return 0, or 1 when the CSV holds no movement-score rows."""
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument("csv", type=Path, help="capture CSV written by capture.sh")
     parser.add_argument(
         "--threshold", type=float, default=DEFAULT_THRESHOLD, help="score threshold"

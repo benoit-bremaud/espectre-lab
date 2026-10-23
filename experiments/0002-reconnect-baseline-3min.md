@@ -28,8 +28,8 @@
 2. From the Pi: `getent hosts espectre-01.local`, ping, check TCP 80 and 6053.
 3. From the Pi, record the web-server event stream for 180 s:
    `curl -N http://192.168.1.123/events`, timestamping every `data:` line.
-4. Nobody deliberately moved near the module; the household was not frozen either
-   (ordinary daytime activity elsewhere in the home).
+4. The house was empty for the whole run (owner away, confirmed afterwards): a genuine
+   unattended baseline, not just an unattended room.
 5. Aggregate the `Movement Score` samples and the `Motion Detected` transitions.
 
 ## Scenarios & results
@@ -67,10 +67,10 @@ i.e. the module had been powered for ~7 min, well past the ~10 s calibration.
 
 ## False positives observed
 
-- One 1-second `Motion Detected = ON` on a 0.406 spike while nobody was near the module.
-  Cause unknown (nothing was watched): candidates are ordinary activity elsewhere in the
-  home, neighbour 2.4 GHz traffic, or simply the idle noise floor sitting too close to the
-  default threshold.
+- One 1-second `Motion Detected = ON` on a 0.406 spike with the house empty: a confirmed
+  false positive. Nobody was there to cause it, so the candidates are neighbour 2.4 GHz
+  traffic, something mechanical (fridge, heating), or simply the idle noise floor sitting
+  too close to the default threshold.
 
 ## Findings
 
@@ -85,8 +85,8 @@ i.e. the module had been powered for ~7 min, well past the ~10 s calibration.
 
 ## Next
 
-- Repeat with a documented placement and a genuinely still room (nobody home or
-  everybody seated), for 10 minutes, to get a clean noise floor:
+- Repeat with a documented placement, house empty again, for 10 minutes, to get a
+  longer noise floor (p99 over ~600 samples):
   `tools/capture.sh 192.168.1.123 600 baseline-empty-house benoit@bb-homelab`.
 - Then a controlled walk-through with `tools/mark.sh` running, to measure the score a
   real person produces and pick a threshold with real margin (likely 0.5–0.6 rather

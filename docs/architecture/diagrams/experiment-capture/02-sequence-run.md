@@ -12,8 +12,8 @@ sequenceDiagram
     participant FS as experiments/data/
     participant PY as analyze.py
 
-    Op->>CAP: capture.sh HOST DURATION SLUG
-    CAP->>ESP: GET /events (curl -N)
+    Op->>CAP: capture.sh HOST DURATION SLUG [SSH_HOST]
+    CAP->>ESP: GET /events (curl -N, run over ssh when SSH_HOST is given)
     activate ESP
     loop every ~1 s until DURATION
         ESP-->>CAP: event: state {id, value}
@@ -32,7 +32,7 @@ sequenceDiagram
 
     Op->>PY: analyze.py <csv> [--threshold 0.4]
     PY->>FS: read csv (+ marks.csv if present)
-    PY-->>Op: markdown: score stats, episodes,<br/>precision/recall per threshold
+    PY-->>Op: markdown: score stats, episodes,<br/>precision/recall at the given threshold
     Op->>Op: paste into experiments/NNNN-*.md
 ```
 

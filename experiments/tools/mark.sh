@@ -15,6 +15,8 @@ if [ "$#" -ne 1 ]; then
 fi
 
 slug=$1
+# The slug becomes a file name: same restriction as capture.sh.
+[[ $slug =~ ^[A-Za-z0-9_-]+$ ]] || { echo "SLUG: letters, digits, - _ only" >&2; exit 2; }
 tools_dir=$(cd "$(dirname "$0")" && pwd)
 data_dir="$tools_dir/../data"
 mkdir -p "$data_dir"
@@ -30,7 +32,7 @@ while IFS= read -r -s -n1 key; do
     q) break ;;
     *) continue ;;
   esac
-  stamp=$(date +%Y-%m-%dT%H:%M:%S.%3N%:z)
+  stamp=$(date +%Y-%m-%dT%H:%M:%S.%3N%:z)  # GNU date (Linux / the Pi); not macOS
   echo "$stamp,$label" >> "$out"
   echo "$stamp $label" >&2
 done
