@@ -5,6 +5,42 @@ and findings that the commit history alone does not capture. Newest entries on t
 
 ---
 
+## 2026-10-24 — Experiment 0003: baseline + walk-through to pick a threshold (#10)
+
+**Context.** `0002` left the default threshold 0.4 inside the idle noise. `0003` repeats
+the baseline for 10 min with a documented placement (shelf above the sofa-bed, 1.8 m,
+~10 m from the box, round table in between) in the owner's everyday conditions (ceiling
+fan on, laundry drying), then a marked walk-through for precision/recall.
+
+**Findings (baselines, house empty).**
+
+- Run 2 (599 s): mean 0.232, p99 0.352, max 0.435 → 2 samples ≥ 0.4, 0 ≥ 0.5.
+- Run 1 cut at 354 s (SSE connection reset) with a draught burst to 1.93 in its first
+  minute, windows open: no threshold filters that, only the environment does.
+- Device `Motion Detected` fires below the 0.4 entity value (0.379–0.397, and once with
+  no published sample over 0.344): internal threshold ≈ 0.369 (`thr:0.3690`, #8) and the
+  ~1 Hz SSE stream under-samples the score. Trust `Motion ON episodes (device)`, not
+  `Samples ≥ threshold`, for the deployed firmware.
+- Walk-through (2026-10-24, windows closed, owner + daughter in the room, marks on the
+  clock): seated-still phases score 0.70–1.47, walking 0.94–1.12. The placement senses
+  **presence, not movement**; "moving vs still" precision is 0.31 at any threshold.
+- Empty vs occupied: at 0.5, 0 % of empty-house samples vs 79 % of occupied samples,
+  every occupied minute detected.
+
+**Decisions.**
+
+- Everyday perturbations (fan, laundry) are kept during captures: the threshold must
+  hold in real conditions, not in a sterile room.
+- **Recommended threshold 0.5** (MCDA 435 vs 0.6 405 vs 0.4 275; no empty-house false
+  alarm 40, presence detection 35, margin over idle max 25). 0.6 is the fallback if
+  longer remote baselines show false alarms. Applied as `segmentation_threshold: 0.5`
+  in #12 (separate PR); the slider is session-only.
+- Regular remote empty-house baselines (owner away) to validate it over time.
+- Two failed walk-through attempts discarded (marks lost in the app terminal pane;
+  marks contradicting scores); only the clean run is committed.
+- Multi-module localization idea filed as #11 (MCDA: refine threshold 415, multi-module
+  heat map 325, ML classification on raw CSI 190 — not pursued).
+
 ## 2026-10-23 — Module back online + experiment capture tooling (#6)
 
 **Context.** Board `espectre-01` (flashed 2026-06-17 on the homelab Pi, ESPHome 2026.5.3,

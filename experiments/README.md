@@ -40,3 +40,9 @@ Dev checks: `pip install -r requirements-dev.txt`, then `ruff format . && ruff c
 - `0002-reconnect-baseline-3min.md` — 2026-10-23: cold restart after months unplugged
   (OK) + 180 s unattended baseline; idle score ~0.23, one false trigger at 0.406 vs
   default threshold 0.4.
+- `0003-threshold-from-data.md` — 2026-10-23: documented placement, two 10 min
+  empty-house baselines in everyday conditions (fan on, laundry; one draught burst to
+  1.93 with windows open) + marked walk-through to pick a threshold from
+  precision/recall. Device fires at ~0.369 (auto threshold), not at the 0.4 the
+  entity shows. Finding: the placement senses **presence**, not movement (a seated
+  person scores 0.7–1.5 vs 0.23 empty); recommended threshold **0.5**.
