@@ -5,7 +5,7 @@ and findings that the commit history alone does not capture. Newest entries on t
 
 ---
 
-## 2026-10-23 — Experiment 0003: baseline + walk-through to pick a threshold (#10)
+## 2026-10-24 — Experiment 0003: baseline + walk-through to pick a threshold (#10)
 
 **Context.** `0002` left the default threshold 0.4 inside the idle noise. `0003` repeats
 the baseline for 10 min with a documented placement (shelf above the sofa-bed, 1.8 m,
@@ -21,13 +21,23 @@ fan on, laundry drying), then a marked walk-through for precision/recall.
   no published sample over 0.344): internal threshold ≈ 0.369 (`thr:0.3690`, #8) and the
   ~1 Hz SSE stream under-samples the score. Trust `Motion ON episodes (device)`, not
   `Samples ≥ threshold`, for the deployed firmware.
-- _Walk-through + threshold recommendation: pending the evening session._
+- Walk-through (2026-10-24, windows closed, owner + daughter in the room, marks on the
+  clock): seated-still phases score 0.70–1.47, walking 0.94–1.12. The placement senses
+  **presence, not movement**; "moving vs still" precision is 0.31 at any threshold.
+- Empty vs occupied: at 0.5, 0 % of empty-house samples vs 79 % of occupied samples,
+  every occupied minute detected.
 
 **Decisions.**
 
 - Everyday perturbations (fan, laundry) are kept during captures: the threshold must
   hold in real conditions, not in a sterile room.
-- Threshold change in `esphome/espectre.yaml` goes in a separate PR after `0003`.
+- **Recommended threshold 0.5** (MCDA 435 vs 0.6 405 vs 0.4 275; no empty-house false
+  alarm 40, presence detection 35, margin over idle max 25). 0.6 is the fallback if
+  longer remote baselines show false alarms. Applied as `segmentation_threshold: 0.5`
+  in #12 (separate PR); the slider is session-only.
+- Regular remote empty-house baselines (owner away) to validate it over time.
+- Two failed walk-through attempts discarded (marks lost in the app terminal pane;
+  marks contradicting scores); only the clean run is committed.
 - Multi-module localization idea filed as #11 (MCDA: refine threshold 415, multi-module
   heat map 325, ML classification on raw CSI 190 — not pursued).
 
