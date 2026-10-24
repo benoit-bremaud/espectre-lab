@@ -73,7 +73,7 @@ Window 12:31:08 → 12:41:07 (599 s), 630 rows. `tools/analyze.py … --threshol
 
 | Metric | Value |
 |---|---|
-| Samples | ~600 (~1 Hz) |
+| Samples | 615 (~1 Hz) |
 | Min | 0.126 |
 | Median | 0.229 |
 | Mean | 0.232 |
@@ -88,7 +88,7 @@ scores: **0.4 → 2, 0.5 → 0, 0.6 → 0**.
 
 ### Walk-through — `data/2026-10-24-walkthrough-marked-2.csv` (+ `.marks.csv`)
 
-Window 11:27:06 → 11:32:36 (330 s), 10 marks, phases on the clock from 11:28:03.
+Window 11:27:06 → 11:32:36 (329 s), 10 marks, phases on the clock from 11:28:03.
 Score per marked phase:
 
 | Phase | Samples | Mean | Max |
