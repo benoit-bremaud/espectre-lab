@@ -1,7 +1,7 @@
 # Experiment 0003 — Empty-house baseline + marked walk-through to pick a threshold
 
 - **Date:** 2026-10-23 (baselines) and 2026-10-24 (walk-through)
-- **Board:** ESP32-C3 SuperMini (`esp32-c3-devkitm-1`), `espectre-01` at `192.168.1.123`
+- **Board:** ESP32-C3 SuperMini (`esp32-c3-devkitm-1`), `espectre-01` at `<MODULE_IP>`
 - **ESPHome version:** 2026.5.3 (firmware flashed 2026-06-17, no OTA since)
 - **ESPectre version/commit:** `github://francescopace/espectre@2.8.0`
 
@@ -36,7 +36,7 @@ empty vs occupied.)
 ## Procedure
 
 1. Owner away all day (house genuinely empty). Baseline run from the laptop through the
-   Pi: `tools/capture.sh 192.168.1.123 600 baseline-empty-house benoit@bb-homelab`.
+   Pi: `tools/capture.sh <MODULE_IP> 600 baseline-empty-house <SSH_HOST>`.
 2. The first run was cut after 354 s (curl exit 56, connection reset) and contained a
    large burst in its first minute; it was repeated in full as `baseline-empty-house-2`.
    Both CSVs are kept.

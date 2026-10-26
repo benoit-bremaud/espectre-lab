@@ -1,7 +1,7 @@
 # QA smoke — experiments/tools (pre-merge gate step 5), after review fixes
-# capture.sh 192.168.1.123 20 qa-smoke benoit@bb-homelab
-Recording 192.168.1.123 for 20s -> /home/vev/Documents/02_personal/espectre-lab/.claude/worktrees/esp32-module-reconnected-e4baf8/experiments/tools/../data/2026-10-23-qa-smoke.csv
-Done: 25 rows in /home/vev/Documents/02_personal/espectre-lab/.claude/worktrees/esp32-module-reconnected-e4baf8/experiments/tools/../data/2026-10-23-qa-smoke.csv
+# capture.sh <MODULE_IP> 20 qa-smoke <SSH_HOST>
+Recording <MODULE_IP> for 20s -> <repo>/experiments/data/2026-10-23-qa-smoke.csv
+Done: 25 rows in <repo>/experiments/data/2026-10-23-qa-smoke.csv
 # head -3 experiments/data/2026-10-23-qa-smoke.csv
 timestamp,entity,value
 2026-10-23T11:14:50.079+02:00,binary_sensor-motion_detected,False
@@ -21,15 +21,15 @@ Window: 2026-10-23 11:14:50 → 11:15:10 (19 s), threshold 0.4
 | Episodes ≥ 0.4 (from scores) | 0 |
 | Motion ON episodes (device) | 0 |
 # rerun same slug must be refused
-/home/vev/Documents/02_personal/espectre-lab/.claude/worktrees/esp32-module-reconnected-e4baf8/experiments/tools/../data/2026-10-23-qa-smoke.csv already exists: pick another SLUG (a rerun must not erase a capture)
+<repo>/experiments/data/2026-10-23-qa-smoke.csv already exists: pick another SLUG (a rerun must not erase a capture)
 exit=1
 # wrong ssh user
-Recording 192.168.1.123 for 3s -> /home/vev/Documents/02_personal/espectre-lab/.claude/worktrees/esp32-module-reconnected-e4baf8/experiments/tools/../data/2026-10-23-qa-bad.csv
-vev@bb-homelab: Permission denied (publickey).
+Recording <MODULE_IP> for 3s -> <repo>/experiments/data/2026-10-23-qa-bad.csv
+<other-user>@<homelab>: Permission denied (publickey).
 Capture failed (curl/ssh exit 255), see messages above
 exit=255
 # unreachable host (via Pi)
-Recording 192.168.1.250 for 8s -> /home/vev/Documents/02_personal/espectre-lab/.claude/worktrees/esp32-module-reconnected-e4baf8/experiments/tools/../data/2026-10-23-qa-down.csv
+Recording <UNREACHABLE_IP> for 8s -> <repo>/experiments/data/2026-10-23-qa-down.csv
 Capture failed (curl/ssh exit 7), see messages above
 exit=7
 # bad slug

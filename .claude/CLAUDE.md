@@ -23,11 +23,13 @@ the upstream component and documents experiments. Curiosity-driven, no productio
 - Experiment run : `experiments/tools/capture.sh HOST SECONDS SLUG [SSH_HOST]`, then
   `python3 experiments/tools/analyze.py experiments/data/<date>-<slug>.csv`.
 - Python checks : `ruff format . && ruff check . && mypy && pytest --cov` (CI `python.yml`).
+- Pre-push secret gate (once per clone) : `scripts/install-hooks.sh`; canary :
+  `scripts/test-secret-gate.sh` (needs `gitleaks` on PATH, the hook refuses the push without it).
 - SonarQube (local instance, pre-push/pre-merge gate) : `pytest --cov --cov-report=xml`
   then `SONAR_TOKEN="$(cat ~/.config/sonarqube/analysis-token)" sonar-scanner`
   (config in `sonar-project.properties`, project `espectre-lab`, waits for the gate).
-- The module lives on the homelab LAN (`192.168.1.x`), not the laptop LAN: reach it via
-  `ssh benoit@bb-homelab` (4th arg of `capture.sh`).
+- The module lives on the homelab LAN (`<LAN_CIDR>`), not the laptop LAN: reach it via
+  `ssh <SSH_HOST>` (4th arg of `capture.sh`).
 
 ## Architecture
 
@@ -35,12 +37,16 @@ the upstream component and documents experiments. Curiosity-driven, no productio
 - `docs/` : how Wi-Fi CSI sensing works, hardware notes, setup guide, privacy/RGPD.
 - `docs/architecture/diagrams/` : Mermaid UML (data-flow of the sensing pipeline).
 - `experiments/` : dated experiment journal (placement, false positives, findings).
+- `experiments/tools/` : stdlib-Python capture/analysis (`capture.sh`, `mark.sh`,
+  `analyze.py`, `sse_to_csv.py`); `experiments/data/` : committed CSVs; `tests/` : pytest.
+- `docs/test-plan.md` : catalogue of planned experiments; backlog on the GitHub Project
+  espectre-lab (#74), tracker issue #33.
 
 ## Project-specific conventions
 
 - Hardware constraint: only **ESP32-S3 / C6 / C3** extract CSI. ESP8266 and classic
   ESP32 are out of scope — never document them as supported.
-- Runs **standalone** (ESPHome `web_server`) — Home Assistant is optional/future.
+- Runs **standalone** (ESPHome `web_server`) — Home Assistant (on the homelab) also records the entities; still optional for the module itself.
 - Wi-Fi credentials NEVER committed: always via `!secret` + gitignored `secrets.yaml`.
 
 ## Known gotchas
@@ -48,5 +54,7 @@ the upstream component and documents experiments. Curiosity-driven, no productio
 - CSI needs `CONFIG_ESP_WIFI_CSI_ENABLED: y` AND power management disabled
   (`CONFIG_PM_ENABLE: n`) in `sdkconfig_options`, else no CSI frames.
 - ~10 s post-boot calibration: the room must stay still or the baseline is wrong.
+- Measured idle score: ~0.10 inert room, ~0.23 with the ceiling fan on, bursts to ~1.9
+  with a draught (windows open). Recommended threshold 0.5 (`experiments/0003`).
 - Many false positives by design (pets, robot vacuum, blinds, neighbour 2.4GHz, weather);
   it reports motion / no-motion only — it cannot count people.

@@ -1,0 +1,52 @@
+title = "espectre-lab: secrets + personal/network data (public repository)"
+
+[extend]
+useDefault = true
+
+# This file has to spell out the literals its rules look for, so it is exempt from those
+# rules only; the default token/key rules still apply to it. The canary test needs no
+# exemption: it builds its fake values from fragments.
+[[allowlists]]
+description = "The rule definitions name the patterns they look for."
+targetRules = ["private-ipv4", "homelab-host", "home-directory-path", "personal-email", "mac-address", "wifi-literal-credential"]
+paths = ['''\.gitleaks\.toml$''']
+
+[[rules]]
+id = "private-ipv4"
+description = "Private LAN (RFC 1918), CGNAT/Tailscale or link-local address: use a <PLACEHOLDER>"
+regex = '''\b(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}|100\.(?:6[4-9]|[7-9]\d|1[01]\d|12[0-7])\.\d{1,3}\.\d{1,3}|169\.254\.\d{1,3}\.\d{1,3})\b'''
+keywords = ["10.", "192.168.", "172.", "100.", "169.254."]
+
+[[rules]]
+id = "homelab-host"
+description = "Homelab hostname or tailnet name: use <homelab> / <SSH_HOST>"
+regex = '''(?i)(?:\bbb-homelab\b|[a-z0-9-]+\.ts\.net\b)'''
+keywords = ["bb-homelab", ".ts.net"]
+
+[[rules]]
+id = "home-directory-path"
+description = "Absolute home path (reveals the local user name): use <repo> or a relative path"
+# No leading slash on purpose: gitleaks' default allowlist drops matches that start with "/home/".
+regex = '''\b(?:[Hh]ome|Users)/[A-Za-z_][A-Za-z0-9._-]*/'''
+keywords = ["home/", "users/"]
+
+[[rules]]
+id = "personal-email"
+description = "Personal e-mail address in a public repository"
+regex = '''(?i)[a-z0-9._%+-]+@(?:gmail|googlemail|outlook|hotmail|yahoo|icloud|proton|protonmail|pm|vev)\.(?:com|me|fr|ch)\b'''
+keywords = ["@gmail", "@googlemail", "@outlook", "@hotmail", "@yahoo", "@icloud", "@proton", "@pm", "@vev"]
+
+[[rules]]
+id = "mac-address"
+description = "MAC address / BSSID (ESPHome logs print them): use <MAC>"
+regex = '''(?i)\b(?:[0-9a-f]{2}:){5}[0-9a-f]{2}\b'''
+keywords = [":"]
+
+[[rules]]
+id = "wifi-literal-credential"
+description = "Literal Wi-Fi ssid/password/psk or API key in YAML: use !secret"
+regex = '''(?im)^\s*(?:ssid|password|psk|key)\s*:\s*["']?[^\s!"'#$][^\s#]*'''
+keywords = ["ssid", "password", "psk", "key"]
+path = '''\.ya?ml$'''
+[[rules.allowlists]]
+paths = ['''secrets\.yaml\.example$''']

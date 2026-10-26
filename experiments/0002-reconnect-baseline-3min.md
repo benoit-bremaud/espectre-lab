@@ -9,9 +9,9 @@
 
 - **Location:** home, room not recorded (module re-plugged after ~4 months unpowered).
 - **Board placement:** on a USB charger; exact spot / height not recorded.
-- **Access point:** home Wi-Fi, homelab LAN `192.168.1.0/24`; module at `192.168.1.123`
-  (`espectre-01.local`). Note: the laptop sits on `192.168.0.0/24`, so the module is
-  only reachable through the Pi (`bb-homelab` over Tailscale), not from the laptop LAN.
+- **Access point:** home Wi-Fi, homelab LAN `<LAN_CIDR>`; module at `<MODULE_IP>`
+  (`espectre-01.local`). Note: the laptop sits on `<LAPTOP_CIDR>`, so the module is
+  only reachable through the Pi (`<homelab>` over Tailscale), not from the laptop LAN.
 - **Threshold / config changes:** defaults. Threshold read back from the device: **0.4**.
   Firmware is the one flashed on 2026-06-17 (commit `fe55677`), no OTA since.
 
@@ -27,7 +27,7 @@
 1. Plug the module on a USB charger, wait for the LED.
 2. From the Pi: `getent hosts espectre-01.local`, ping, check TCP 80 and 6053.
 3. From the Pi, record the web-server event stream for 180 s:
-   `curl -N http://192.168.1.123/events`, timestamping every `data:` line.
+   `curl -N http://<MODULE_IP>/events`, timestamping every `data:` line.
 4. The house was empty for the whole run (owner away, confirmed afterwards): a genuine
    unattended baseline, not just an unattended room.
 5. Aggregate the `Movement Score` samples and the `Motion Detected` transitions.
@@ -87,7 +87,7 @@ i.e. the module had been powered for ~7 min, well past the ~10 s calibration.
 
 - Repeat with a documented placement, house empty again, for 10 minutes, to get a
   longer noise floor (p99 over ~600 samples):
-  `tools/capture.sh 192.168.1.123 600 baseline-empty-house benoit@bb-homelab`.
+  `tools/capture.sh <MODULE_IP> 600 baseline-empty-house <SSH_HOST>`.
 - Then a controlled walk-through with `tools/mark.sh` running, to measure the score a
   real person produces and pick a threshold with real margin (likely 0.5–0.6 rather
   than 0.4) from precision/recall.
