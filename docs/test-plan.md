@@ -16,12 +16,13 @@ becomes a dated entry in [`experiments/`](../experiments/README.md).
 - Capture and analyse:
 
   ```bash
-  experiments/tools/capture.sh <MODULE_IP> <seconds> <slug> <SSH_HOST>
+  source experiments/lab.env
+  experiments/tools/capture.sh "$MODULE_IP" <seconds> <slug> "$SSH_HOST"
   python3 experiments/tools/analyze.py experiments/data/<date>-<slug>.csv --threshold 0.4
   python3 experiments/tools/analyze.py experiments/data/<date>-<slug>.csv --threshold 0.5
   ```
 
-- Ground-truth marks (`tools/mark.sh <slug>`) must be typed in a **system terminal**: the
+- Ground-truth marks (`experiments/tools/mark.sh <slug>`) must be typed in a **system terminal**: the
   Claude app terminal pane cannot read single keys.
 - Trust `Motion ON episodes (device)` over `Samples ≥ threshold` for the firmware's real
   false positives (the stream is ~1 Hz, the detector evaluates ~4× faster).

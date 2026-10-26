@@ -30,9 +30,10 @@ Reproducible capture + analysis, stdlib Python only (decision: SSE + Python, see
 the ESPHome web server's `/events` stream.
 
 ```bash
-# paths below are relative to experiments/
+# paths below are relative to experiments/; MODULE_IP and SSH_HOST come from lab.env
+source lab.env
 # 1. record N seconds into data/<date>-<slug>.csv (4th arg: ssh host when the module is on another LAN)
-tools/capture.sh <MODULE_IP> 600 baseline-empty-house <SSH_HOST>
+tools/capture.sh "$MODULE_IP" 600 baseline-empty-house "$SSH_HOST"
 # 2. (optional, second terminal) ground-truth marks: m = moving, s = still, q = quit
 tools/mark.sh baseline-empty-house
 # 3. stats + precision/recall as markdown, paste into the journal
