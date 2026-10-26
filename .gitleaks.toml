@@ -1,0 +1,45 @@
+title = "espectre-lab: secrets + personal/network data (public repository)"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "The rules themselves and the canary test name the patterns they look for."
+paths = [
+  '''\.gitleaks\.toml$''',
+  '''scripts/test-secret-gate\.sh$''',
+]
+
+[[rules]]
+id = "private-ipv4"
+description = "Private LAN address (RFC 1918) in a public repository: use a <PLACEHOLDER>"
+regex = '''\b(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})\b'''
+keywords = ["10.", "192.168.", "172."]
+
+[[rules]]
+id = "homelab-host"
+description = "Homelab hostname or tailnet name: use <homelab> / <SSH_HOST>"
+regex = '''(?i)(?:\bbb-homelab\b|[a-z0-9-]+\.ts\.net\b)'''
+keywords = ["bb-homelab", ".ts.net"]
+
+[[rules]]
+id = "home-directory-path"
+description = "Absolute home path (reveals the local user name): use <repo> or a relative path"
+# No leading slash on purpose: gitleaks' default allowlist drops matches that start with "/home/".
+regex = '''\bhome/[a-z_][a-z0-9_-]*/'''
+keywords = ["home/"]
+
+[[rules]]
+id = "personal-email"
+description = "Personal e-mail address in a public repository"
+regex = '''[A-Za-z0-9._%+-]+@(?:gmail|googlemail|outlook|hotmail|yahoo|icloud|proton|vev)\.(?:com|me|fr)\b'''
+keywords = ["@gmail", "@googlemail", "@outlook", "@hotmail", "@yahoo", "@icloud", "@proton", "@vev"]
+
+[[rules]]
+id = "wifi-literal-credential"
+description = "Literal Wi-Fi ssid/password/psk in YAML: use !secret"
+regex = '''(?im)^\s*(?:ssid|password|psk)\s*:\s*["']?[^\s!"'#$][^\s#]*'''
+keywords = ["ssid", "password", "psk"]
+path = '''\.ya?ml$'''
+[rules.allowlist]
+paths = ['''secrets\.yaml\.example$''']
