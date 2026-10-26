@@ -60,7 +60,8 @@ later for automations.
 ## Tuning
 
 - Keep fans and draughts away from the line between the board and the access point: on our
-  module a ceiling fan more than doubles the idle score (0.10 → 0.23), see
+  module the idle score more than doubles (0.10 → 0.23) with the ceiling fan on and/or a
+  draught; the two are not separated yet (tests A2/A3), see
   `experiments/0004-baseline-empty-closed-nofan.md`.
 - Our data recommends a threshold of **0.5** (`experiments/0003-threshold-from-data.md`);
   the auto threshold (about 0.37) sits inside the fan-on noise. Slider changes are

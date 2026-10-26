@@ -13,11 +13,15 @@ Wi-Fi CSI sensing is in a real home.
 
 ## Local lab values
 
-Docs and commands use placeholders (`<MODULE_IP>`, `<SSH_HOST>`, `<homelab>`) because this
-repository is public. Copy `lab.env.example` to `lab.env` (gitignored), fill in the real
+Docs and commands use placeholders because this repository is public: `<MODULE_IP>` (the
+module), `<SSH_HOST>` (`user@host` of the homelab jump host), `<homelab>` (its hostname),
+`<other-user>` (another account on it), `<UNREACHABLE_IP>` (a deliberately dead address in
+the smoke tests), `<LAN_CIDR>` / `<LAPTOP_CIDR>` (the homelab and laptop subnets), `<repo>`
+(the local checkout path) and `<personal email>`. Copy `lab.env.example` to `lab.env` (gitignored), fill in the real
 values and `source experiments/lab.env`, then call the tools with `"$MODULE_IP"` and
 `"$SSH_HOST"`. The pre-push gate (`scripts/hooks/pre-push`) refuses private IPs, the
-homelab hostname, personal e-mails and home paths.
+homelab hostname, personal e-mails, home paths and MAC addresses; enable it once per clone with
+`scripts/install-hooks.sh` (needs `gitleaks` on PATH).
 
 ## Tools (`tools/`)
 

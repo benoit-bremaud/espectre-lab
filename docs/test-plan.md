@@ -60,7 +60,7 @@ becomes a dated entry in [`experiments/`](../experiments/README.md).
 
 | Id | Issue | Test | Configuration |
 |---|---|---|---|
-| D1 | #14 | Baseline 24 h to 7 d | Home Assistant recorder history (blocked: HA broken) |
+| D1 | #14 | Baseline 24 h to 7 d | Home Assistant recorder history (HA is back since 2026-10-26; unblocked) |
 | D2 | #30 | Robustness | router reboot, Wi-Fi off/on 60 s, power cycle |
 
 ## E. Validate the final configuration
@@ -72,7 +72,7 @@ becomes a dated entry in [`experiments/`](../experiments/README.md).
 
 ## Suggested order
 
-1. **Owner away:** C3 (lights are remotely switchable), then A2, A3, A6 once the fan can be driven (project `smart-ceiling-fan`) (A4, A5 if time allows).
+1. **Owner away:** C3 neon blocks (string lights done in 0005), D1 (HA history), A3, A6; A2 and A4 need the fan, so they wait until it can be driven (project `smart-ceiling-fan`) or the owner is home (A5 if time allows).
 2. **Owner at home:** B1, B2, B6.
 3. Then E1 (closes #12), B3, E2, B4, B5.
-4. Later: C1, D2, D1 once Home Assistant history is usable; C2 only if equipment turns up.
+4. Later: C1, D2; C2 only if equipment turns up.

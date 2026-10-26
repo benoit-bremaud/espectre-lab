@@ -29,6 +29,9 @@ and the ESP8266 are **not** supported. See [docs/hardware.md](docs/hardware.md).
 
 Full guide: [docs/setup-esphome.md](docs/setup-esphome.md).
 
+Contributing: run `scripts/install-hooks.sh` once per clone to enable the pre-push gate
+that refuses secrets and personal/network data (needs `gitleaks`).
+
 ## Docs
 
 - [How it works](docs/how-it-works.md) — Wi-Fi CSI sensing explained simply.
