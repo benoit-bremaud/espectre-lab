@@ -20,3 +20,6 @@ __pycache__/
 .coverage
 coverage.xml
 .scannerwork/
+
+# Local lab values (real IPs / hosts)
+experiments/lab.env

@@ -59,6 +59,12 @@ later for automations.
 
 ## Tuning
 
+- Keep fans and draughts away from the line between the board and the access point: on our
+  module a ceiling fan more than doubles the idle score (0.10 → 0.23), see
+  `experiments/0004-baseline-empty-closed-nofan.md`.
+- Our data recommends a threshold of **0.5** (`experiments/0003-threshold-from-data.md`);
+  the auto threshold (about 0.37) sits inside the fan-on noise. Slider changes are
+  session-only, a durable value belongs in the YAML (tracked in #12).
 - If you get too many false triggers, raise the detection threshold in the `espectre`
   config block (see the upstream README for the exact options) and re-flash via OTA.
 - Re-calibrate with a still room whenever you move the board or rearrange furniture

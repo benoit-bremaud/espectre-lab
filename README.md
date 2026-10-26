@@ -35,6 +35,7 @@ Full guide: [docs/setup-esphome.md](docs/setup-esphome.md).
 - [Hardware](docs/hardware.md) — supported boards, what to buy, why not ESP8266.
 - [Setup with ESPHome](docs/setup-esphome.md) — flash, calibrate, standalone vs Home Assistant.
 - [Privacy & RGPD](docs/privacy.md) — local-only data and consent considerations.
+- [Test plan](docs/test-plan.md) — catalogue of planned experiments with their configuration.
 - [Experiments journal](experiments/) — dated notes on placement, false positives, findings,
   plus the capture/analysis scripts (`experiments/tools/`).
 

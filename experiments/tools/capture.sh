@@ -2,12 +2,12 @@
 # Record the module's SSE event stream into experiments/data/<date>-<slug>.csv.
 #
 # Usage: capture.sh HOST DURATION_S SLUG [SSH_HOST]
-#   HOST        module address, e.g. 192.168.1.123 or espectre-01.local
+#   HOST        module address, e.g. <MODULE_IP> or espectre-01.local
 #   DURATION_S  how long to record, in seconds
 #   SLUG        short scenario name (letters, digits, - _), e.g. baseline-empty-house
 #   SSH_HOST    optional: run curl on that ssh host (when HOST is on another LAN)
 #
-# Example: capture.sh 192.168.1.123 600 baseline-empty-house benoit@bb-homelab
+# Example: capture.sh <MODULE_IP> 600 baseline-empty-house <SSH_HOST>
 set -euo pipefail
 
 if [ "$#" -lt 3 ]; then

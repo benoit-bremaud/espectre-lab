@@ -5,6 +5,30 @@ and findings that the commit history alone does not capture. Newest entries on t
 
 ---
 
+## 2026-10-26 — Experiment 0004: inert-room baseline + test plan (#16, #32)
+
+**Context.** Owner away, windows closed, fan off: the first run where the two usual
+perturbations of `0003` are both absent. Used the occasion to write down every test worth
+running next.
+
+**Findings.**
+
+- 30 min, 1862 samples: median **0.100**, p99 0.163, max 0.211, **0 device episodes**
+  (0003 run 2, fan on: median 0.229, max 0.435, 6 episodes). Stable per 5 min block, no
+  burst, no SSE reset.
+- The module idles about 2.3× lower without fan and draught: they, not the detector,
+  drive the false positives. The windows-closed and fan-off effects are not separated
+  yet (A2 #17 and A3 #18).
+
+**Decisions.**
+
+- Test plan catalogue in `docs/test-plan.md` (A empty house, B occupied, C perturbations,
+  D long run, E validation), one issue per test (#16–#31), tracker #33, existing #12 and
+  #14 reused for E1 and D1. New GitHub Project **espectre-lab** (#74, Todo / In Progress /
+  Done) holds the backlog; labels `experiment` and `test-plan` added.
+- Next brick: **A2** (#17), fan on / windows closed, 15 min, needs the fan switched on
+  while the owner is away.
+
 ## 2026-10-24 — Experiment 0003: baseline + walk-through to pick a threshold (#10)
 
 **Context.** `0002` left the default threshold 0.4 inside the idle noise. `0003` repeats
@@ -44,8 +68,8 @@ fan on, laundry drying), then a marked walk-through for precision/recall.
 ## 2026-10-23 — Module back online + experiment capture tooling (#6)
 
 **Context.** Board `espectre-01` (flashed 2026-06-17 on the homelab Pi, ESPHome 2026.5.3,
-ESPectre 2.8.0) was re-plugged after ~4 months. It rejoined Wi-Fi at `192.168.1.123` on
-the homelab LAN, reachable from the laptop only through the Pi (`bb-homelab`, Tailscale).
+ESPectre 2.8.0) was re-plugged after ~4 months. It rejoined Wi-Fi at `<MODULE_IP>` on
+the homelab LAN, reachable from the laptop only through the Pi (`<homelab>`, Tailscale).
 First real measurement = experiment `0002`: 180 s unattended, house empty.
 
 **Findings.**
@@ -201,7 +225,7 @@ technology and test it on a single ESP32. No production or commercial goal.
 
 **Done.**
 
-- `git init` on `main`, local git email set to `bbd.concept@gmail.com`.
+- `git init` on `main`, local git email set to `<personal email>`.
 - `.claude/` scaffolded (base profile) and `CLAUDE.md` filled with real project specifics.
 - Root files: `README.md`, `.gitignore` (ESPHome secrets/builds + Claude overrides).
 - Docs: how-it-works, hardware, setup-esphome, privacy.

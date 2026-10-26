@@ -64,3 +64,9 @@ The radio environment changes for many reasons beyond a human walking:
 
 Expect to tune the threshold and accept that this is a *presence hint*, not a precise
 occupancy sensor.
+
+Measured on our module (see [`experiments/`](../experiments/README.md)): an empty room with
+windows closed and the ceiling fan off idles at a score of about **0.10** (max 0.21 over
+30 min); with the fan on it idles at about **0.23** (max 0.43), and an open window with a
+draught produced a one-off burst to 1.9. A seated person scores 0.7–1.5. The environment,
+not the module, is the main source of false positives.
