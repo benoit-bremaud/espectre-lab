@@ -5,6 +5,15 @@ and findings that the commit history alone does not capture. Newest entries on t
 
 ---
 
+## 2026-10-26 — Experiment 0005: remote lights (test C3, partial, #34)
+
+- Lights driven by a **temporary time-triggered Home Assistant automation** created from
+  the owner's signed-in browser (no token, no webhook), deleted after the run.
+- String lights on their Zigbee plug: no effect on the score (median 0.092 on vs 0.094
+  off, 0 device episodes over 24 min). Inert-room floor reproduced (0.094 vs 0.100).
+- The two Zigbee neons accepted `light.turn_on` but never changed state (unpowered or out
+  of reach): neon blocks to rerun. Home Assistant is back up, so #14 is unblocked.
+
 ## 2026-10-26 — Experiment 0004: inert-room baseline + test plan (#16, #32)
 
 **Context.** Owner away, windows closed, fan off: the first run where the two usual

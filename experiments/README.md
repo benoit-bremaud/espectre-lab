@@ -60,3 +60,7 @@ Planned runs and their configuration: [`../docs/test-plan.md`](../docs/test-plan
   windows closed, **fan off**: median 0.100, p99 0.163, max 0.211, 0 device episodes —
   2.3× quieter than with the fan on (0.23). Fan and draught, not the module, drive the
   false positives. Reference run of the [test plan](../docs/test-plan.md).
+- `0005-lights-onoff.md` — 2026-10-26: test C3, lights switched by a temporary timed Home
+  Assistant automation during a 24 min empty-house capture. String lights on/off: no
+  effect (median 0.092 vs 0.094 off). Neons did not respond (not tested). Floor 0.094
+  reproduces `0004`.

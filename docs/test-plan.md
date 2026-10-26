@@ -54,7 +54,7 @@ becomes a dated entry in [`experiments/`](../experiments/README.md).
 |---|---|---|---|
 | C1 | #28 | Door, blinds, washing machine, microwave | empty room, one event at a time, marked, 5 min each |
 | C2 | #29 | Pets, robot vacuum | idea: needs borrowed equipment |
-| C3 | #34 | Remote lights (string lights + 2 neons) | empty room, fan off; owner toggles remotely on the clock: all off / string / neons / all on, 5 min each. **Runnable while away** |
+| C3 | #34 | Remote lights (string lights + 2 neons). **String lights done (0005): no effect; neons pending** | empty room, fan off; owner toggles remotely on the clock: all off / string / neons / all on, 5 min each. **Runnable while away** |
 
 ## D. Long run and robustness
 
